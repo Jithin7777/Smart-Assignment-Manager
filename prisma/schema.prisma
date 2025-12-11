@@ -9,6 +9,52 @@ generator client {
   output   = "../lib/generated/prisma"
 }
 
+
 datasource db {
   provider = "postgresql"
 }
+
+
+model User {
+  id        String       @id @default(cuid())
+  name      String
+  email     String       @unique
+  password  String
+  role      Role
+  assignments Assignment[] @relation("TeacherAssignments")
+  submissions Submission[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Assignment {
+  id          String      @id @default(cuid())
+  title       String
+  description String
+  teacher     User        @relation("TeacherAssignments", fields: [teacherId], references: [id])
+  teacherId   String
+  submissions Submission[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Submission {
+  id           String     @id @default(cuid())
+  content      String
+  assignment   Assignment @relation(fields: [assignmentId], references: [id])
+  assignmentId String
+  student      User       @relation(fields: [studentId], references: [id])
+  studentId    String
+  grade        Int?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+enum Role {
+  TEACHER
+  STUDENT
+}
+
