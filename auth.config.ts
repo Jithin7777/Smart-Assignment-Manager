@@ -56,7 +56,7 @@ export default {
   ],
   
   pages: {
-    signIn: "/auth/login",
+    signIn: "/login",
   },
 
   callbacks: {
