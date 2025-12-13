@@ -1,9 +1,14 @@
 import { NextRequest, NextResponse } from "next/server";
-import prisma from "@/lib/prisma";
 import { auth } from "@/auth";
+import {
+  getAssignmentById,
+  updateAssignment,
+  deleteAssignment,
+} from "@/services/assignment.service";
 
 async function getCurrentUser() {
   const session = await auth();
+  console.log("SESSION:", session);
   return session?.user;
 }
 
@@ -14,12 +19,10 @@ function handleError(error: unknown) {
 // ========== GET one assignment ==========
 export async function GET(
   req: NextRequest,
-  context: { params: Promise<{ id: string }> }  // Note: params is a Promise
+  context: { params: Promise<{ id: string }> }
 ) {
   try {
-    // Await the params first!
     const { id } = await context.params;
-    console.log("📌 ID received in API:", id);
 
     if (!id) {
       return NextResponse.json(
@@ -28,10 +31,7 @@ export async function GET(
       );
     }
 
-    const assignment = await prisma.assignment.findUnique({
-      where: { id },
-      include: { teacher: true, submissions: true },
-    });
+    const assignment = await getAssignmentById(id);
 
     if (!assignment) {
       return NextResponse.json(
@@ -42,9 +42,8 @@ export async function GET(
 
     return NextResponse.json(assignment);
   } catch (error) {
-    console.error("❌ API ERROR:", error);
     return NextResponse.json(
-      { error: error instanceof Error ? error.message : "Unknown error" },
+      { error: handleError(error) },
       { status: 500 }
     );
   }
@@ -53,7 +52,7 @@ export async function GET(
 // ========== UPDATE assignment ==========
 export async function PUT(
   req: NextRequest,
-  context: { params: Promise<{ id: string }> }  // Note: params is a Promise
+  context: { params: Promise<{ id: string }> }
 ) {
   try {
     const user = await getCurrentUser();
@@ -61,19 +60,11 @@ export async function PUT(
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
-    // Await the params first!
     const { id } = await context.params;
-    
-    if (!id) {
-      return NextResponse.json(
-        { error: "Assignment ID is required" },
-        { status: 400 }
-      );
-    }
 
     const { title, description } = await req.json();
 
-    const existing = await prisma.assignment.findUnique({ where: { id } });
+    const existing = await getAssignmentById(id);
     if (!existing || existing.teacherId !== user.id) {
       return NextResponse.json(
         { error: "Unauthorized or assignment not found" },
@@ -81,21 +72,21 @@ export async function PUT(
       );
     }
 
-    const updated = await prisma.assignment.update({
-      where: { id },
-      data: { title, description },
-    });
+    const updated = await updateAssignment(id, title, description);
 
     return NextResponse.json(updated);
   } catch (error) {
-    return NextResponse.json({ error: handleError(error) }, { status: 500 });
+    return NextResponse.json(
+      { error: handleError(error) },
+      { status: 500 }
+    );
   }
 }
 
 // ========== DELETE assignment ==========
 export async function DELETE(
   req: NextRequest,
-  context: { params: Promise<{ id: string }> }  // Note: params is a Promise
+  context: { params: Promise<{ id: string }> }
 ) {
   try {
     const user = await getCurrentUser();
@@ -103,17 +94,9 @@ export async function DELETE(
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
-    // Await the params first!
     const { id } = await context.params;
-    
-    if (!id) {
-      return NextResponse.json(
-        { error: "Assignment ID is required" },
-        { status: 400 }
-      );
-    }
 
-    const existing = await prisma.assignment.findUnique({ where: { id } });
+    const existing = await getAssignmentById(id);
     if (!existing || existing.teacherId !== user.id) {
       return NextResponse.json(
         { error: "Unauthorized or assignment not found" },
@@ -121,10 +104,15 @@ export async function DELETE(
       );
     }
 
-    await prisma.assignment.delete({ where: { id } });
+    await deleteAssignment(id);
 
-    return NextResponse.json({ message: "Assignment deleted successfully" });
+    return NextResponse.json({
+      message: "Assignment deleted successfully",
+    });
   } catch (error) {
-    return NextResponse.json({ error: handleError(error) }, { status: 500 });
+    return NextResponse.json(
+      { error: handleError(error) },
+      { status: 500 }
+    );
   }
 }
