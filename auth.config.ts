@@ -12,6 +12,7 @@ import Credentials from "next-auth/providers/credentials"
 import bcrypt from "bcrypt"
 import type { NextAuthConfig } from "next-auth"
 import prisma from "./lib/prisma"
+import { Role } from "@prisma/client"
 
 export default {
   providers: [
@@ -63,7 +64,7 @@ export default {
     async jwt({ token, user }) {
       if (user) {
         token.id = user.id;
-        token.role = user.role;
+        token.role = user.role as Role;
       }
       return token;
     },
@@ -71,7 +72,7 @@ export default {
     async session({ session, token }) {
       if (session.user) {
         session.user.id = token.id as string;
-        session.user.role = token.role as string;
+        session.user.role = token.role as Role;
       }
       return session;
     },
