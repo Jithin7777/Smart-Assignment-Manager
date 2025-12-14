@@ -1,8 +1,8 @@
 // app/student/page.tsx
 import { auth } from "@/auth";
-import LogoutButton from "@/components/auth/LogoutButton";
-import { getAllAssignments } from "@/services/assignment.service";
-import { AssignmentItem } from "@/types/assignment";
+import { getAllAssignments } from "@/features/assignments/service";
+import { AssignmentItem } from "@/features/assignments/types";
+import LogoutButton from "@/features/components/auth/LogoutButton";
 import Link from "next/link";
 
 export default async function StudentPage() {

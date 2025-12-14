@@ -1,7 +1,7 @@
 // app/student/assignments/[id]/page.tsx
 import { auth } from "@/auth";
-import { getAssignmentById } from "@/services/assignment.service";
-import SubmitAssignmentForm from "@/components/student/SubmitAssignmentForm";
+import { getAssignmentById } from "@/features/assignments/service";
+import SubmitAssignmentForm from "@/features/submissions/components/SubmitAssignmentForm";
 
 export default async function StudentAssignmentPage({
   params,

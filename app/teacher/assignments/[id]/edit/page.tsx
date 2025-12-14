@@ -2,8 +2,8 @@
 
 import { useEffect, useState } from "react";
 import { useRouter, useParams } from "next/navigation";
-import { AssignmentItem } from "@/types/assignment";
-import CreateAssignmentForm from "@/components/teacher/CreateAssignmentForm";
+import { AssignmentItem } from "@/features/assignments/types";
+import CreateAssignmentForm from "@/features/assignments/components/CreateAssignmentForm";
 
 export default function EditAssignmentPage() {
   const router = useRouter();

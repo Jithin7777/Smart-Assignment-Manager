@@ -1,7 +1,7 @@
 // app/teacher/page.tsx
 import { auth } from "@/auth";
+import LogoutButton from "@/features/components/auth/LogoutButton";
 import prisma from "@/lib/prisma";
-import LogoutButton from "@/components/auth/LogoutButton";
 import Link from "next/link";
 
 export default async function TeacherDashboard() {

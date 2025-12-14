@@ -3,7 +3,7 @@ import { auth } from "@/auth";
 import {
   getAllAssignments,
   createAssignment,
-} from "@/services/assignment.service";
+} from "@/features/assignments/service";
 
 // Helper function to get current user
 async function getCurrentUser() {

@@ -1,5 +1,5 @@
 'use client'
-import CreateAssignmentForm from "@/components/teacher/CreateAssignmentForm";
+import CreateAssignmentForm from "@/features/assignments/components/CreateAssignmentForm";
 import { useRouter } from "next/navigation";
 
 export default function NewAssignmentPage() {

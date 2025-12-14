@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { AssignmentItem } from "@/types/assignment";
+import { AssignmentItem } from "@/features/assignments/types";
 
 interface Props {
   initialData?: AssignmentItem | null;

@@ -4,7 +4,7 @@ import {
   getAssignmentById,
   updateAssignment,
   deleteAssignment,
-} from "@/services/assignment.service";
+} from "@/features/assignments/service";
 
 async function getCurrentUser() {
   const session = await auth();

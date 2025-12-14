@@ -3,7 +3,7 @@
 
   import { useEffect, useState } from "react";
   import Link from "next/link";
-  import { AssignmentItem } from "@/types/assignment";
+  import { AssignmentItem } from "@/features/assignments/types";
 
   export default function AssignmentsPage() {
     const [assignments, setAssignments] = useState<AssignmentItem[]>([]);
