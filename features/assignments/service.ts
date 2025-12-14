@@ -13,7 +13,15 @@ export async function getAllAssignments() {
           name: true,
         },
       },
-      submissions: true,
+      submissions: {
+        select: {
+          id: true,
+          studentId: true,
+          grade: true,
+          // feedback: true,
+          createdAt: true,
+        },
+      },
     },
   });
 }
@@ -32,8 +40,12 @@ export async function getAssignmentsForStudent(studentId: string) {
         },
       },
       submissions: {
-        where: {
-          studentId,
+        where: { studentId },
+        select: {
+          id: true,
+          grade: true,
+          // feedback: true,
+          createdAt: true,
         },
       },
     },

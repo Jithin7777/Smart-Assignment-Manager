@@ -10,7 +10,7 @@ export default async function StudentAssignmentPage({
 }) {
   // Await the params Promise first
   const { id } = await params;
-  
+
   const session = await auth();
   if (!session) return <p>You are not logged in.</p>;
 
@@ -33,15 +33,14 @@ export default async function StudentAssignmentPage({
       </p>
 
       <div className="mt-6">
-       {existingSubmission ? (
-  <div className="p-4 bg-green-50 rounded-lg">
-    <p className="font-semibold text-green-700">Submitted Answer:</p>
-    <p className="mt-2 text-gray-800">{existingSubmission.content}</p>
-  </div>
-) : (
-  <SubmitAssignmentForm assignmentId={assignment.id} />
-)}
-
+        {existingSubmission ? (
+          <div className="p-4 bg-green-50 rounded-lg">
+            <p className="font-semibold text-green-700">Submitted Answer:</p>
+            <p className="mt-2 text-gray-800">{existingSubmission.content}</p>
+          </div>
+        ) : (
+          <SubmitAssignmentForm assignmentId={assignment.id} />
+        )}
       </div>
     </div>
   );

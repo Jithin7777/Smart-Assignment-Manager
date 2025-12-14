@@ -1,7 +1,6 @@
 // app/student/page.tsx
 import { auth } from "@/auth";
 import { getAllAssignments } from "@/features/assignments/service";
-import { AssignmentItem } from "@/features/assignments/types";
 import LogoutButton from "@/features/components/auth/LogoutButton";
 import Link from "next/link";
 
@@ -12,14 +11,10 @@ export default async function StudentPage() {
     return <p className="p-6">You are not logged in.</p>;
   }
 
-  // Fetch all assignments (global)
-  const assignments: AssignmentItem[] = await getAllAssignments();
+  const assignments = await getAllAssignments();
 
-  // Calculate submitted & pending
-  const submittedCount = assignments.filter((assignment) =>
-    assignment.submissions?.some(
-      (submission) => submission.studentId === session.user.id
-    )
+  const submittedCount = assignments.filter((a) =>
+    a.submissions.some((s) => s.studentId === session.user.id)
   ).length;
 
   const pendingCount = assignments.length - submittedCount;
@@ -34,42 +29,27 @@ export default async function StudentPage() {
 
       {/* Welcome */}
       <p className="text-lg mb-6">
-        Welcome,{" "}
-        <span className="font-semibold">{session.user.name}</span>
+        Welcome, <span className="font-semibold">{session.user.name}</span>
       </p>
 
       {/* Stats */}
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-        <div className="p-4 bg-purple-100 border border-purple-300 rounded-xl shadow">
-          <p className="text-2xl font-bold">{assignments.length}</p>
-          <p className="text-gray-700">Assigned Tasks</p>
-        </div>
-
-        <div className="p-4 bg-blue-100 border border-blue-300 rounded-xl shadow">
-          <p className="text-2xl font-bold">{submittedCount}</p>
-          <p className="text-gray-700">Submitted</p>
-        </div>
-
-        <div className="p-4 bg-red-100 border border-red-300 rounded-xl shadow">
-          <p className="text-2xl font-bold">{pendingCount}</p>
-          <p className="text-gray-700">Pending</p>
-        </div>
+        <Stat title="Assigned Tasks" value={assignments.length} />
+        <Stat title="Submitted" value={submittedCount} />
+        <Stat title="Pending" value={pendingCount} />
       </div>
 
-      {/* Assignment List */}
+      {/* Assignments */}
       <div className="mt-10">
-        <h2 className="text-xl font-semibold mb-4">
-          All Assignments
-        </h2>
+        <h2 className="text-xl font-semibold mb-4">All Assignments</h2>
 
         {assignments.length === 0 ? (
           <p className="text-gray-500">No assignments available.</p>
         ) : (
           <ul className="space-y-4">
             {assignments.map((assignment) => {
-              const isSubmitted = assignment.submissions?.some(
-                (submission) =>
-                  submission.studentId === session.user.id
+              const mySubmission = assignment.submissions.find(
+                (s) => s.studentId === session.user.id
               );
 
               return (
@@ -91,24 +71,47 @@ export default async function StudentPage() {
                         Teacher: {assignment.teacher?.name}
                       </p>
 
-                      <p
-                        className={`mt-2 font-semibold ${
-                          isSubmitted
-                            ? "text-green-600"
-                            : "text-red-600"
-                        }`}
-                      >
-                        {isSubmitted ? "Submitted" : "Pending"}
-                      </p>
-                    </div>
+                      {/* Status */}
+                      <p className="mt-2 font-semibold">
+                        {!mySubmission && (
+                          <span className="text-red-600">Pending</span>
+                        )}
 
-                    {!isSubmitted && (
+                        {mySubmission && mySubmission.grade === null && (
+                          <span className="text-yellow-600">
+                            Submitted (Waiting for grading)
+                          </span>
+                        )}
+
+                        {mySubmission && mySubmission.grade !== null && (
+                          <span className="text-green-600">
+                            Graded — {mySubmission.grade}
+                          </span>
+                        )}
+                      </p>
+
+                      {/* Feedback */}
+                      {/* {mySubmission?.feedback && (
+                        <p className="mt-2 text-sm text-gray-700">
+                          <b>Teacher Feedback:</b>{" "}
+                          {mySubmission.feedback}
+                        </p>
+                      )} */}
+                    </div>
+                    
+
+                    {/* Action */}
+                    {!mySubmission ? (
                       <Link
                         href={`/student/assignments/${assignment.id}`}
                         className="text-blue-600 underline text-sm"
                       >
                         View & Submit
                       </Link>
+                    ) : (
+                      <span className="text-sm text-gray-400">
+                        Submission locked
+                      </span>
                     )}
                   </div>
                 </li>
@@ -117,6 +120,15 @@ export default async function StudentPage() {
           </ul>
         )}
       </div>
+    </div>
+  );
+}
+
+function Stat({ title, value }: { title: string; value: number }) {
+  return (
+    <div className="p-4 border rounded-lg bg-gray-50 text-center shadow">
+      <p className="text-2xl font-bold">{value}</p>
+      <p className="text-gray-600">{title}</p>
     </div>
   );
 }
