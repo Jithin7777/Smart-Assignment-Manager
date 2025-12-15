@@ -1,22 +1,96 @@
-// import GitHub from "next-auth/providers/github"
+
+// import Credentials from "next-auth/providers/credentials"
+// import bcrypt from "bcrypt"
 // import type { NextAuthConfig } from "next-auth"
- 
-// export default { providers: [GitHub] } satisfies NextAuthConfig
+// import prisma from "./lib/prisma"
+// import { Role } from "@prisma/client"
+
+// export default {
+//   providers: [
+//     // GitHub,
+//     Credentials({
+//       id: "credentials",
+//       name: "Credentials",
+//       credentials: {
+//         email: { label: "Email", type: "text" },
+//         password: { label: "Password", type: "password" },
+//       },
+//       async authorize(credentials) {
+//         if (!credentials?.email || !credentials?.password) {
+//           return null;
+//         }
+
+//         const user = await prisma.user.findUnique({
+//           where: { email: credentials.email as string },
+//         });
+        
+//         if (!user || !user.password) {
+//           return null;
+//         }
+
+//         const isValid = await bcrypt.compare(
+//           credentials.password as string,
+//           user.password
+//         );
+
+//         if (!isValid) {
+//           return null;
+//         }
+
+//         return {
+//           id: user.id,
+//           name: user.name,
+//           email: user.email,
+//           role: user.role,
+//         };
+//       },
+//     }),
+//   ],
+  
+//   pages: {
+//     signIn: "/login",
+//   },
+
+//   callbacks: {
+//     async jwt({ token, user }) {
+//       if (user) {
+//         token.id = user.id;
+//         token.role = user.role as Role;
+//       }
+//       return token;
+//     },
+
+//     async session({ session, token }) {
+//       if (session.user) {
+//         session.user.id = token.id as string;
+//         session.user.role = token.role as Role;
+//       }
+//       return session;
+//     },
+//   },
+
+// //   session: {
+// //     strategy: "jwt",
+// //     maxAge: 30 * 24 * 60 * 60,
+// //   },
+  
+//   secret: process.env.AUTH_SECRET,
+// } satisfies NextAuthConfig
 
 
 
 
-// /auth.config.ts
-// import GitHub from "next-auth/providers/github"
+// auth.config.ts
+// auth.config.ts
+// auth.config.ts
 import Credentials from "next-auth/providers/credentials"
 import bcrypt from "bcrypt"
 import type { NextAuthConfig } from "next-auth"
 import prisma from "./lib/prisma"
-import { Role } from "@prisma/client"
+import { UserRole } from "./lib/types" // Import from lib/types
 
 export default {
   providers: [
-    // GitHub,
     Credentials({
       id: "credentials",
       name: "Credentials",
@@ -50,7 +124,7 @@ export default {
           id: user.id,
           name: user.name,
           email: user.email,
-          role: user.role,
+          role: user.role as UserRole, // Type assertion
         };
       },
     }),
@@ -64,7 +138,7 @@ export default {
     async jwt({ token, user }) {
       if (user) {
         token.id = user.id;
-        token.role = user.role as Role;
+        token.role = user.role;
       }
       return token;
     },
@@ -72,16 +146,11 @@ export default {
     async session({ session, token }) {
       if (session.user) {
         session.user.id = token.id as string;
-        session.user.role = token.role as Role;
+        session.user.role = token.role as UserRole;
       }
       return session;
     },
   },
-
-//   session: {
-//     strategy: "jwt",
-//     maxAge: 30 * 24 * 60 * 60,
-//   },
   
   secret: process.env.AUTH_SECRET,
 } satisfies NextAuthConfig
