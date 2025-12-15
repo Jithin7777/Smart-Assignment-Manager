@@ -1,8 +1,8 @@
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import prisma from "@/lib/prisma";
 
 export async function GET(
-  req: Request,
+  req: NextRequest,
   context: { params: Promise<{ id: string }> }
 ) {
   const { id } = await context.params; // ✅ FIX
@@ -36,19 +36,18 @@ export async function GET(
 
 
 export async function PATCH(
-  req: Request,
+  req: NextRequest,
   context: { params: Promise<{ id: string }> }
 ) {
   const { id } = await context.params; // ✅ REQUIRED
 
-  const { grade, feedback } = await req.json();
+  const { grade} = await req.json();
 
   try {
     const updated = await prisma.submission.update({
       where: { id },
       data: {
         grade: Number(grade),
-        // feedback,
       },
     });
 
@@ -61,3 +60,5 @@ export async function PATCH(
     );
   }
 }
+
+
