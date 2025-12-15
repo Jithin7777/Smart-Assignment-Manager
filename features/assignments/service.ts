@@ -1,8 +1,7 @@
 import prisma from "@/lib/prisma";
 
-/* =======================
-   GET all assignments
-   ======================= */
+  //  GET all assignments
+ 
 export async function getAllAssignments() {
   return prisma.assignment.findMany({
     orderBy: { createdAt: "desc" },
@@ -11,6 +10,7 @@ export async function getAllAssignments() {
         select: {
           id: true,
           name: true,
+          email:true
         },
       },
       submissions: {
@@ -26,9 +26,9 @@ export async function getAllAssignments() {
   });
 }
 
-/* =======================
+/* 
    GET assignments for a student
-   ======================= */
+    */
 export async function getAssignmentsForStudent(studentId: string) {
   return prisma.assignment.findMany({
     orderBy: { createdAt: "desc" },
@@ -52,9 +52,9 @@ export async function getAssignmentsForStudent(studentId: string) {
   });
 }
 
-/* =======================
+/* 
    GET assignment by ID
-   ======================= */
+ */
 export async function getAssignmentById(id: string) {
   return prisma.assignment.findUnique({
     where: { id },
@@ -63,6 +63,7 @@ export async function getAssignmentById(id: string) {
         select: {
           id: true,
           name: true,
+          email:true
         },
       },
       submissions: true,
@@ -70,9 +71,9 @@ export async function getAssignmentById(id: string) {
   });
 }
 
-/* =======================
+/* 
    CREATE assignment
-   ======================= */
+    */
 export async function createAssignment(
   title: string,
   description: string,
@@ -89,9 +90,9 @@ export async function createAssignment(
   });
 }
 
-/* =======================
+/* 
    UPDATE assignment
-   ======================= */
+  */
 export async function updateAssignment(
   id: string,
   title: string,
