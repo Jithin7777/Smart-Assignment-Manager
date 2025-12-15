@@ -28,8 +28,8 @@
     title: string;
     description: string;
     teacherId: string;
-    teacher?: Teacher;               // Optional, included if you fetch with teacher
-    submissions?: SubmissionItem[];  // Optional, included if you fetch submissions
+    teacher?: Teacher;               
+    submissions?: SubmissionItem[]; 
     createdAt: Date;
     updatedAt: Date;
   };

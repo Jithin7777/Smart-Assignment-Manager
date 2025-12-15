@@ -1,119 +1,87 @@
-// app/(dashboards)/teacher/page.tsx
 export const dynamic = "force-dynamic";
 
 import { auth } from "@/auth";
 import LogoutButton from "@/features/components/auth/LogoutButton";
-import prisma from "@/lib/prisma";
-import Link from "next/link";
+import { getTeacherDashboardData } from "@/features/teacher/service";
+import { calculateDashboardStats } from "@/features/teacher/utils";
+import { StatCard } from "@/features/teacher/components/StatCard";
+import { SubmissionList } from "@/features/teacher/components/SubmissionList";
+import { ActionCard } from "@/features/teacher/components/ActionCard";
+import { DashboardHeader } from "@/features/teacher/components/DashboardHeader";
+import { FolderOpen, FileText, Clock, Star } from "lucide-react";
 
 export default async function TeacherDashboard() {
   const session = await auth();
+  if (!session) return <p>Not logged in</p>;
 
-  if (!session) {
-    return <div className="p-6">You are not logged in.</div>;
-  }
+  const { assignments, submissions } =
+    await getTeacherDashboardData(session.user.id);
 
-  const teacherId = session.user.id;
-
-  const [assignments, submissions] = await Promise.all([
-    prisma.assignment.findMany({
-      where: { teacherId },
-      select: { id: true, title: true },
-    }),
-    prisma.submission.findMany({
-      where: {
-        assignment: { teacherId },
-      },
-      include: {
-        student: { select: { name: true } },
-        assignment: { select: { title: true } },
-      },
-      orderBy: { createdAt: "desc" },
-    }),
-  ]);
-
-  const pendingReviews = submissions.filter((s) => s.grade === null).length;
+  const { pendingReviews, averageGrade } =
+    calculateDashboardStats(submissions);
 
   return (
-    <div className="p-6">
-      <div className="flex justify-between mb-6">
-        <h1 className="text-3xl font-bold">Teacher Dashboard</h1>
-        <LogoutButton />
-      </div>
+    <div className="min-h-screen bg-slate-50 p-4 md:p-6">
+      <div className="max-w-7xl mx-auto space-y-8">
 
-      <p className="mb-6">
-        Welcome, <b>{session.user.name}</b>
-      </p>
-
-      {/* Stats */}
-      <div className="grid grid-cols-3 gap-4 mb-10">
-        <Stat title="Assignments" value={assignments.length} />
-        <Stat title="Submissions" value={submissions.length} />
-        <Stat title="Pending Reviews" value={pendingReviews} />
-      </div>
-  {/* Quick Actions */}
-      <div className="mt-8 flex gap-4">
-        <Link
-          href="/teacher/assignments/new"
-          className="px-4 py-2 bg-blue-600 text-white rounded"
-        >
-          Create Assignment
-        </Link>
-
-        <Link
-          href="/teacher/assignments"
-          className="px-4 py-2 bg-gray-200 rounded"
-        >
-          View Assignments
-        </Link>
-      </div>
-      {/* Submissions */}
-      <h2 className="text-xl font-semibold mb-4">Submissions</h2>
-
-      {submissions.length === 0 ? (
-        <p>No submissions yet</p>
-      ) : (
-        <div className="space-y-4">
-          {submissions.map((s) => (
-            <div key={s.id} className="border p-4 rounded shadow bg-white">
-              <p>
-                <b>{s.student.name}</b> → {s.assignment.title}
-              </p>
-
-              <p className="mt-2 text-gray-700">
-                <b>Answer:</b> {s.content}
-              </p>
-
-              <p className="mt-2 text-sm">
-                Status:{" "}
-                {s.grade !== null ? (
-                  <span className="text-green-600">Graded ({s.grade})</span>
-                ) : (
-                  <span className="text-red-600">Pending</span>
-                )}
-              </p>
-
-              {s.grade === null && (
-                <Link
-                  href={`/teacher/submissions/${s.id}`}
-                  className="inline-block mt-3 px-3 py-1 bg-blue-600 text-white rounded"
-                >
-                  Review
-                </Link>
-              )}
-            </div>
-          ))}
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+          <DashboardHeader name={session.user.name!} />
+          <LogoutButton />
         </div>
-      )}
-    </div>
-  );
-}
 
-function Stat({ title, value }: { title: string; value: number }) {
-  return (
-    <div className="border rounded p-4 bg-gray-50 text-center">
-      <p className="text-2xl font-bold">{value}</p>
-      <p className="text-gray-600">{title}</p>
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+          <StatCard
+            title="Assignments"
+            value={assignments.length}
+            icon={<FolderOpen className="w-5 h-5" />}
+            color="blue"
+          />
+          <StatCard
+            title="Submissions"
+            value={submissions.length}
+            icon={<FileText className="w-5 h-5" />}
+            color="purple"
+          />
+          <StatCard
+            title="Pending"
+            value={pendingReviews}
+            icon={<Clock className="w-5 h-5" />}
+            color="amber"
+            showAlert={pendingReviews > 0}
+          />
+          <StatCard
+            title="Avg Grade"
+            value={`${averageGrade}%`}
+            icon={<Star className="w-5 h-5" />}
+            color="green"
+          />
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <ActionCard
+            title="Create Assignment"
+            description="Publish a new task"
+            icon={<FileText />}
+            href="/teacher/assignments/new"
+            primary
+          />
+          <ActionCard
+            title="Manage Assignments"
+            description="View all assignments"
+            icon={<FolderOpen />}
+            href="/teacher/assignments"
+          />
+        </div>
+
+        <div className="bg-white border rounded-xl p-5 shadow-sm">
+          <h2 className="text-lg font-semibold mb-4">
+            Recent Submissions
+          </h2>
+
+          <SubmissionList submissions={submissions} />
+        </div>
+
+      </div>
     </div>
   );
 }

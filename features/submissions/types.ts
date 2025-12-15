@@ -1,7 +1,7 @@
 // features/submissions/types.ts
 
 export interface Student {
-  id: string;
+  id?: string;
   name: string;
 }
 
@@ -13,9 +13,9 @@ export interface Assignment {
 export interface Submission {
   id: string;
   content: string;
-  grade: string | null;
-  feedback: string | null;
-  createdAt: string;
+  grade: number | null;
+  // feedback: string | null;
+  createdAt: Date;
   student: Student;
   assignment: Assignment;
 }
