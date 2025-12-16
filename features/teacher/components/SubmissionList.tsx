@@ -20,7 +20,6 @@ export function SubmissionList({ submissions }: { submissions: Submission[] }) {
 
               <p className="text-sm text-slate-600 line-clamp-2">{s.content}</p>
 
-              {/* ✅ GRADE / STATUS */}
               <div className="mt-2 text-sm">
                 {isPending ? (
                   <span className="text-amber-600 flex items-center gap-1">

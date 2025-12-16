@@ -6,7 +6,14 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import { Loader2, FileText } from "lucide-react";
 
 interface Props {
@@ -16,7 +23,9 @@ interface Props {
 
 export default function CreateAssignmentForm({ initialData, onSubmit }: Props) {
   const [title, setTitle] = useState(initialData?.title ?? "");
-  const [description, setDescription] = useState(initialData?.description ?? "");
+  const [description, setDescription] = useState(
+    initialData?.description ?? ""
+  );
   const [loading, setLoading] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -40,17 +49,16 @@ export default function CreateAssignmentForm({ initialData, onSubmit }: Props) {
                   {initialData ? "Edit Assignment" : "Create New Assignment"}
                 </CardTitle>
                 <CardDescription>
-                  {initialData 
+                  {initialData
                     ? "Update the assignment details below"
                     : "Fill in the details to create a new assignment for your students"}
                 </CardDescription>
               </div>
             </div>
           </CardHeader>
-          
+
           <form onSubmit={handleSubmit}>
             <CardContent className="space-y-6 pt-4">
-              {/* Title Field */}
               <div className="space-y-2">
                 <Label htmlFor="title" className="text-sm font-medium">
                   Assignment Title <span className="text-red-500">*</span>
@@ -69,7 +77,6 @@ export default function CreateAssignmentForm({ initialData, onSubmit }: Props) {
                 </p>
               </div>
 
-              {/* Description Field */}
               <div className="space-y-2">
                 <Label htmlFor="description" className="text-sm font-medium">
                   Description <span className="text-red-500">*</span>
@@ -84,11 +91,11 @@ export default function CreateAssignmentForm({ initialData, onSubmit }: Props) {
                   disabled={loading}
                 />
                 <p className="text-xs text-slate-500">
-                  Include all necessary instructions, requirements, and evaluation criteria
+                  Include all necessary instructions, requirements, and
+                  evaluation criteria
                 </p>
               </div>
 
-              {/* Additional Fields (optional - can be added later) */}
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 {/* Due Date Field (optional) */}
                 <div className="space-y-2">
@@ -127,9 +134,12 @@ export default function CreateAssignmentForm({ initialData, onSubmit }: Props) {
 
             <CardFooter className="flex flex-col sm:flex-row gap-4 justify-between pt-6 border-t">
               <div className="text-sm text-slate-500">
-                <p>All fields marked with <span className="text-red-500">*</span> are required</p>
+                <p>
+                  All fields marked with <span className="text-red-500">*</span>{" "}
+                  are required
+                </p>
               </div>
-              
+
               <div className="flex gap-3 w-full sm:w-auto">
                 <Button
                   type="button"
@@ -161,8 +171,6 @@ export default function CreateAssignmentForm({ initialData, onSubmit }: Props) {
             </CardFooter>
           </form>
         </Card>
-
-      
       </div>
     </div>
   );

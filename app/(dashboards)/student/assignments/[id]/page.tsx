@@ -2,8 +2,14 @@ import { auth } from "@/auth";
 import { getAssignmentById } from "@/features/assignments/service";
 import SubmitAssignmentForm from "@/features/submissions/components/SubmitAssignmentForm";
 import { CheckCircle, Mail, Calendar, User } from "lucide-react";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 
@@ -34,42 +40,42 @@ export default async function StudentAssignmentPage({
     (s) => s.studentId === session.user.id
   );
 
-  // Generate consistent avatar initials
   const getAvatarInitials = (name: string) => {
     return name
-      .split(' ')
-      .map(part => part[0])
-      .join('')
+      .split(" ")
+      .map((part) => part[0])
+      .join("")
       .toUpperCase()
       .slice(0, 2);
   };
 
-  // Generate consistent avatar color based on teacher ID
   const getAvatarColor = (id: string) => {
     const colors = [
-      'bg-blue-500 text-white',
-      'bg-green-500 text-white',
-      'bg-purple-500 text-white',
+      "bg-blue-500 text-white",
+      "bg-green-500 text-white",
+      "bg-purple-500 text-white",
       // 'bg-amber-500 text-white',
-      'bg-rose-500 text-white',
-      'bg-indigo-500 text-white',
+      "bg-rose-500 text-white",
+      "bg-indigo-500 text-white",
     ];
-    const index = id.split('').reduce((acc, char) => acc + char.charCodeAt(0), 0) % colors.length;
+    const index =
+      id.split("").reduce((acc, char) => acc + char.charCodeAt(0), 0) %
+      colors.length;
     return colors[index];
   };
 
   const avatarColor = getAvatarColor(assignment.teacher.id);
-  const teacherInitials = getAvatarInitials(assignment.teacher.name || "Teacher");
+  const teacherInitials = getAvatarInitials(
+    assignment.teacher.name || "Teacher"
+  );
 
   return (
     <div className="p-6 max-w-4xl mx-auto space-y-6">
-      {/* Assignment Header Card */}
       <Card>
         <CardHeader>
           <div className="flex items-start justify-between">
             <div className="flex items-center gap-4">
               <Avatar className="h-14 w-14">
-                {/* <AvatarImage src={assignment.teacher.image} /> */}
                 <AvatarFallback className={`${avatarColor} font-semibold`}>
                   {teacherInitials}
                 </AvatarFallback>
@@ -92,7 +98,6 @@ export default async function StudentAssignmentPage({
         </CardContent>
       </Card>
 
-      {/* Submission Section */}
       <Card>
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
@@ -106,12 +111,12 @@ export default async function StudentAssignmentPage({
             )}
           </CardTitle>
           <CardDescription>
-            {existingSubmission 
+            {existingSubmission
               ? "You have already submitted this assignment"
               : "Submit your work below"}
           </CardDescription>
         </CardHeader>
-        
+
         <CardContent>
           {existingSubmission ? (
             <div className="space-y-6">
@@ -123,7 +128,10 @@ export default async function StudentAssignmentPage({
               <div className="flex items-center gap-4 text-sm text-gray-500">
                 <div className="flex items-center gap-2">
                   <Calendar className="h-4 w-4" />
-                  <span>Submitted: {new Date(existingSubmission.createdAt).toLocaleString()}</span>
+                  <span>
+                    Submitted:{" "}
+                    {new Date(existingSubmission.createdAt).toLocaleString()}
+                  </span>
                 </div>
                 {existingSubmission.grade && (
                   <Badge variant="secondary" className="ml-4">
@@ -149,35 +157,39 @@ export default async function StudentAssignmentPage({
         <CardContent>
           <div className="flex items-start gap-4">
             <Avatar className="h-16 w-16">
-              {/* <AvatarImage src={assignment.teacher.image} /> */}
               <AvatarFallback className={`${avatarColor} text-xl font-bold`}>
                 {teacherInitials}
               </AvatarFallback>
             </Avatar>
             <div className="space-y-2">
-              <h3 className="font-semibold text-lg">{assignment.teacher.name}</h3>
-              
+              <h3 className="font-semibold text-lg">
+                {assignment.teacher.name}
+              </h3>
+
               {assignment.teacher.email && (
                 <div className="flex items-center gap-2">
                   <Mail className="h-4 w-4 text-gray-400" />
-                  <span className="text-gray-600">{assignment.teacher.email}</span>
+                  <span className="text-gray-600">
+                    {assignment.teacher.email}
+                  </span>
                   <Button
                     size="sm"
                     variant="ghost"
                     className="ml-2 h-6 px-2"
                     asChild
                   >
-                    <a href={`mailto:${assignment.teacher.email}`}>
-                     
-                    </a>
+                    <a href={`mailto:${assignment.teacher.email}`}></a>
                   </Button>
                 </div>
               )}
-              
+
               <div className="pt-2 text-sm text-gray-500">
                 <div className="flex items-center gap-2">
                   <Calendar className="h-4 w-4" />
-                  <span>Assignment created: {new Date(assignment.createdAt).toLocaleDateString()}</span>
+                  <span>
+                    Assignment created:{" "}
+                    {new Date(assignment.createdAt).toLocaleDateString()}
+                  </span>
                 </div>
               </div>
             </div>

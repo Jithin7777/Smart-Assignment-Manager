@@ -11,7 +11,6 @@ async function getCurrentUser() {
   return session?.user;
 }
 
-// GET all assignments
 export async function GET() {
   try {
     const assignments = await getAllAssignments();
@@ -25,7 +24,7 @@ export async function GET() {
   }
 }
 
-// POST - create new assignment (TEACHER only)
+// POST - (TEACHER only)
 export async function POST(req: Request) {
   try {
     const user = await getCurrentUser();

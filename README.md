@@ -1,36 +1,122 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Smart Assignment Manager
 
-## Getting Started
+Smart Assignment Manager is a **TypeScript-based, role-based assignment management system** built with **Next.js (App Router)**, **NextAuth**, and **Prisma with PostgreSQL**.
 
-First, run the development server:
+The application implements **full CRUD operations** for assignments and submissions, allowing:
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+- **Teachers** to create, read, update, and delete assignments
+- **Students** to view assignments, submit work, and track their submissions
+
+The application allows:
+
+- **Teachers** to create, manage, and grade assignments
+- **Students** to view assignments and submit their work
+
+## Features
+
+### Authentication & Authorization
+
+- Credentials-based authentication using NextAuth
+- JWT-based session handling
+- Secure password hashing
+- Role-based access control (**TEACHER / STUDENT**)
+
+### Teacher Module
+
+- Create new assignments
+- Edit existing assignments
+- View student submissions
+- Grade submissions
+- Teacher dashboard with statistics
+
+### Student Module
+
+- View available assignments
+- Submit assignments
+- View submission status and grades
+
+## Tech Stack
+
+- **Framework:** Next.js 14 (App Router)
+- **Language:** TypeScript
+- **Authentication:** NextAuth
+- **Database:** PostgreSQL (Neon) with Prisma ORM
+- **Styling & UI Components:** Tailwind CSS, shadcn/ui
+- **Package Manager:** pnpm
+
+## Project Structure (Overview)
+
+```txt
+app/
+├─ (auth)/login              # Authentication pages
+├─ (dashboards)/
+│  ├─ student/               # Student dashboard
+│  └─ teacher/               # Teacher dashboard
+├─ api/                      # Backend route handlers
+├─ components/               # Shared UI components
+├─ features/                 # Feature-based services & logic
+├─ lib/                      # Prisma client & utilities
+├─ prisma/                   # Prisma schema, migrations, seed
+├─ types/                    # Global & NextAuth types
+
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Steps to Run the Project Locally
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+1. Clone the repository
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+```bash
+git clone git@github.com:Jithin7777/Smart-Assignment-Manager.git
+cd smart-assignment-manager
+```
 
-## Learn More
+2. Install dependencies
 
-To learn more about Next.js, take a look at the following resources:
+```bash
+pnpm install
+```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+3. Setup environment variables
+   Create a .env file in the project root.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+```env
+DATABASE_URL=postgresql://<user>:<password>@<host>/<db>?sslmode=require
+AUTH_URL=http://localhost:3000
+AUTH_SECRET=your-random-secret
+```
 
-## Deploy on Vercel
+4. Setup the database (Prisma)
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+```bash
+pnpm prisma generate
+pnpm prisma migrate dev
+pnpm prisma db seed
+```
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+5. Start the development server
+
+```bash
+pnpm dev
+```
+
+### Demo Login Credentials (if seeded)
+
+```txt
+
+Teacher:
+Email: teacher@example.com
+Password: teacher123
+
+Student:
+Email: student@example.com
+Password: student123
+
+```
+
+## Architecture & Design Decisions
+
+- Feature-based folder structure for scalability
+- Server Components with minimal client-side logic
+- Prisma ORM for type-safe database access
+- Role-based access control handled at the application level
+- Shadcn/ui used for consistent UI components

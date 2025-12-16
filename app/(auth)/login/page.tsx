@@ -59,7 +59,9 @@ export default function LoginPage() {
     <div className="flex items-center justify-center min-h-screen bg-gray-50">
       <Card className="w-full max-w-md">
         <CardHeader>
-          <CardTitle className="text-2xl font-bold text-center">Login</CardTitle>
+          <CardTitle className="text-2xl font-bold text-center">
+            Login
+          </CardTitle>
           <CardDescription className="text-center">
             Enter your credentials to access your account
           </CardDescription>
@@ -85,7 +87,7 @@ export default function LoginPage() {
                   </FormItem>
                 )}
               />
-              
+
               <FormField
                 control={form.control}
                 name="password"
@@ -104,7 +106,7 @@ export default function LoginPage() {
                   </FormItem>
                 )}
               />
-              
+
               <Button type="submit" className="w-full" disabled={isSubmitting}>
                 {isSubmitting ? (
                   <>
@@ -117,8 +119,6 @@ export default function LoginPage() {
               </Button>
             </form>
           </Form>
-          
-      
         </CardContent>
       </Card>
     </div>

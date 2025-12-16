@@ -7,7 +7,6 @@ async function getCurrentUser() {
   return session?.user;
 }
 
-// POST - submit an assignment
 export async function POST(req: NextRequest) {
   try {
     const user = await getCurrentUser();

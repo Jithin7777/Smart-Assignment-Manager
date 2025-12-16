@@ -1,7 +1,7 @@
 import prisma from "@/lib/prisma";
 
-  //  GET all assignments
- 
+//  GET all assignments
+
 export async function getAllAssignments() {
   return prisma.assignment.findMany({
     orderBy: { createdAt: "desc" },
@@ -10,7 +10,7 @@ export async function getAllAssignments() {
         select: {
           id: true,
           name: true,
-          email:true
+          email: true,
         },
       },
       submissions: {
@@ -63,7 +63,7 @@ export async function getAssignmentById(id: string) {
         select: {
           id: true,
           name: true,
-          email:true
+          email: true,
         },
       },
       submissions: true,

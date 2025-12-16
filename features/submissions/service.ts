@@ -1,6 +1,5 @@
 import prisma from "@/lib/prisma";
 
-// CREATE a submission
 export async function createSubmission(
   assignmentId: string,
   studentId: string,
@@ -15,7 +14,6 @@ export async function createSubmission(
   });
 }
 
-// GET all submissions for a student
 export async function getStudentSubmissions(studentId: string) {
   return prisma.submission.findMany({
     where: { studentId },
@@ -24,7 +22,6 @@ export async function getStudentSubmissions(studentId: string) {
   });
 }
 
-// GET submissions for an assignment (optional, for teacher view)
 export async function getAssignmentSubmissions(assignmentId: string) {
   return prisma.submission.findMany({
     where: { assignmentId },
@@ -33,8 +30,10 @@ export async function getAssignmentSubmissions(assignmentId: string) {
   });
 }
 
-// UPDATE submission (e.g., grade by teacher)
-export async function updateSubmissionGrade(submissionId: string, grade: number) {
+export async function updateSubmissionGrade(
+  submissionId: string,
+  grade: number
+) {
   return prisma.submission.update({
     where: { id: submissionId },
     data: { grade },

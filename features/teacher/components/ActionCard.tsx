@@ -18,9 +18,7 @@ export function ActionCard({
     <Link
       href={href}
       className={`p-5 rounded-xl border block ${
-        primary
-          ? "bg-blue-600 text-white"
-          : "bg-white hover:border-blue-300"
+        primary ? "bg-blue-600 text-white" : "bg-white hover:border-blue-300"
       }`}
     >
       {icon}

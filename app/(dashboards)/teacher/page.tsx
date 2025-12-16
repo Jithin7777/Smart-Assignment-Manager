@@ -14,16 +14,15 @@ export default async function TeacherDashboard() {
   const session = await auth();
   if (!session) return <p>Not logged in</p>;
 
-  const { assignments, submissions } =
-    await getTeacherDashboardData(session.user.id);
+  const { assignments, submissions } = await getTeacherDashboardData(
+    session.user.id
+  );
 
-  const { pendingReviews, averageGrade } =
-    calculateDashboardStats(submissions);
+  const { pendingReviews, averageGrade } = calculateDashboardStats(submissions);
 
   return (
     <div className="min-h-screen bg-slate-50 p-4 md:p-6">
       <div className="max-w-7xl mx-auto space-y-8">
-
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
           <DashboardHeader name={session.user.name!} />
           <LogoutButton />
@@ -74,13 +73,10 @@ export default async function TeacherDashboard() {
         </div>
 
         <div className="bg-white border rounded-xl p-5 shadow-sm">
-          <h2 className="text-lg font-semibold mb-4">
-            Recent Submissions
-          </h2>
+          <h2 className="text-lg font-semibold mb-4">Recent Submissions</h2>
 
           <SubmissionList submissions={submissions} />
         </div>
-
       </div>
     </div>
   );

@@ -1,5 +1,3 @@
-// features/submissions/types.ts
-
 export interface Student {
   id?: string;
   name: string;

@@ -1,12 +1,3 @@
-// // types/assignment.ts
-// export type AssignmentItem = {
-//   id: string;
-//   title: string;
-//   description: string;
-// };
-
-// types/assignment.ts
-
 export type Teacher = {
   id: string;
   name: string;

@@ -5,7 +5,7 @@ export async function GET(
   req: NextRequest,
   context: { params: Promise<{ id: string }> }
 ) {
-  const { id } = await context.params; // ✅ FIX
+  const { id } = await context.params;
 
   try {
     const submission = await prisma.submission.findUnique({
@@ -33,15 +33,13 @@ export async function GET(
   }
 }
 
-
-
 export async function PATCH(
   req: NextRequest,
   context: { params: Promise<{ id: string }> }
 ) {
-  const { id } = await context.params; // ✅ REQUIRED
+  const { id } = await context.params;
 
-  const { grade} = await req.json();
+  const { grade } = await req.json();
 
   try {
     const updated = await prisma.submission.update({
@@ -60,7 +58,3 @@ export async function PATCH(
     );
   }
 }
-
-
-
-
