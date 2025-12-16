@@ -80,9 +80,14 @@ pnpm install
    Create a .env file in the project root.
 
 ```env
-DATABASE_URL=postgresql://<user>:<password>@<host>/<db>?sslmode=require
+# Database
+DATABASE_URL="your-neon-postgresql-connection-string"
+
 AUTH_URL=http://localhost:3000
-AUTH_SECRET=your-random-secret
+
+# Generate with: pnpm dlx 
+auth secret
+AUTH_SECRET="replace-with-your-generated-secret"
 ```
 
 4. Setup the database (Prisma)
