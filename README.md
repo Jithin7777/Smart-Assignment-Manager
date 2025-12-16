@@ -85,8 +85,7 @@ DATABASE_URL="your-neon-postgresql-connection-string"
 
 AUTH_URL=http://localhost:3000
 
-# Generate with: pnpm dlx 
-auth secret
+# Generate with: pnpm dlx auth secret
 AUTH_SECRET="replace-with-your-generated-secret"
 ```
 
