@@ -120,3 +120,10 @@ Password: student123
 - Prisma ORM for type-safe database access
 - Role-based access control handled at the application level
 - Shadcn/ui used for consistent UI components
+
+
+##  Deployment & CI/CD
+
+- Live Demo: [Smart Assignment Manager](https://smart-assignment-manager.vercel.app)
+- Automatic deployment is enabled on Vercel for the `main` branch.
+- Environment variables are securely configured in Vercel.
