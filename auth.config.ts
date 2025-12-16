@@ -65,6 +65,7 @@ export default {
       }
       return session;
     },
+    
   },
   
   secret: process.env.AUTH_SECRET,

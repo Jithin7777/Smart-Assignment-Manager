@@ -25,7 +25,6 @@ import { Button } from "@/components/ui/button";
 import { Loader2 } from "lucide-react";
 import {
   BookOpen,
-  Shield,
   Mail,
   Lock,
   LogIn,
@@ -55,12 +54,23 @@ export default function LoginPage() {
       return;
     }
 
-    const session = await getSession();
-    const role = session?.user?.role;
+  //   const session = await getSession();
+  //   const role = session?.user?.role;
 
+  //   if (role === "TEACHER") router.replace("/teacher");
+  //   else if (role === "STUDENT") router.replace("/student");
+  //   else router.replace("/");
+  // };
+
+ // After successful sign-in, fetch the session from the API
+    const sessionRes = await fetch("/api/auth/session");
+    const sessionData = await sessionRes.json();
+
+    // Check role and redirect manually
+    const role = sessionData?.user?.role;
     if (role === "TEACHER") router.replace("/teacher");
     else if (role === "STUDENT") router.replace("/student");
-    else router.replace("/");
+    else router.replace("/"); // fallback
   };
 
   return (
