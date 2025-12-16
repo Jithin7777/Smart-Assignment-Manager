@@ -1,6 +1,6 @@
 # Smart Assignment Manager
 
-Smart Assignment Manager is a **TypeScript-based, role-based assignment management system** built with **Next.js (App Router)**, **NextAuth**, and **Prisma with PostgreSQL**.
+Smart Assignment Manager is a **TypeScript based, role-based assignment management system** built with **Next.js (App Router)**, **NextAuth**, and **Prisma with PostgreSQL**.
 
 The application implements **full CRUD operations** for assignments and submissions, allowing:
 
