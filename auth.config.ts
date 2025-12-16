@@ -5,6 +5,7 @@ import prisma from "./lib/prisma"
 import { UserRole } from "./lib/types" 
 
 export default {
+  trustHost: true, // ✅ THIS FIXES VERCEL ISSUE
   providers: [
     Credentials({
       id: "credentials",
