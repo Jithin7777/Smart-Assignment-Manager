@@ -54,24 +54,24 @@ export default function LoginPage() {
       return;
     }
 
-  //   const session = await getSession();
-  //   const role = session?.user?.role;
+    const session = await getSession();
+    const role = session?.user?.role;
 
-  //   if (role === "TEACHER") router.replace("/teacher");
-  //   else if (role === "STUDENT") router.replace("/student");
-  //   else router.replace("/");
-  // };
-
- // After successful sign-in, fetch the session from the API
-    const sessionRes = await fetch("/api/auth/session");
-    const sessionData = await sessionRes.json();
-
-    // Check role and redirect manually
-    const role = sessionData?.user?.role;
     if (role === "TEACHER") router.replace("/teacher");
     else if (role === "STUDENT") router.replace("/student");
-    else router.replace("/"); // fallback
+    else router.replace("/");
   };
+
+//  // After successful sign-in, fetch the session from the API
+//     const sessionRes = await fetch("/api/auth/session");
+//     const sessionData = await sessionRes.json();
+
+//     // Check role and redirect manually
+//     const role = sessionData?.user?.role;
+//     if (role === "TEACHER") router.replace("/teacher");
+//     else if (role === "STUDENT") router.replace("/student");
+//     else router.replace("/"); // fallback
+//   };
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-50 flex flex-col items-center justify-center p-4">
