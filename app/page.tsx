@@ -14,31 +14,17 @@
 // }
 
 
-"use client";
-
-import { useEffect } from "react";
-import { useRouter } from "next/navigation";
-import { getSession } from "next-auth/react";
+import Link from "next/link";
 
 export default function Home() {
-  const router = useRouter();
-  const BASE_URL = "https://smart-assignment-manager.vercel.app"; // Production URL
-
-  useEffect(() => {
-    const checkSession = async () => {
-      const session = await getSession();
-
-      if (session?.user?.role === "TEACHER") {
-        router.replace(`${BASE_URL}/teacher`); // redirect to teacher dashboard
-      } else if (session?.user?.role === "STUDENT") {
-        router.replace(`${BASE_URL}/student`); // redirect to student dashboard
-      } else {
-        router.replace(`${BASE_URL}/login`); // not logged in → login page
-      }
-    };
-
-    checkSession();
-  }, [router, BASE_URL]);
-
-  return null; // nothing is rendered while redirecting
+  return (
+    <div className="min-h-screen flex items-center justify-center">
+      <Link
+        href="/login"
+        className="px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition"
+      >
+        Go to Login
+      </Link>
+    </div>
+  );
 }
