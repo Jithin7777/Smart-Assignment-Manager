@@ -39,7 +39,7 @@ The application allows:
 
 - **Framework:** Next.js 14 (App Router)
 - **Language:** TypeScript
-- **Authentication:** NextAuth
+- **Authentication:** Auth.js (NextAuth v5)
 - **Database:** PostgreSQL (Neon) with Prisma ORM
 - **Styling & UI Components:** Tailwind CSS, shadcn/ui
 - **Package Manager:** pnpm
