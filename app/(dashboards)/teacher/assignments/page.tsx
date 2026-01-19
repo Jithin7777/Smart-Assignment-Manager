@@ -3,11 +3,30 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { AssignmentItem } from "@/features/assignments/types";
+
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Skeleton } from "@/components/ui/skeleton";
-import { RefreshCw, Plus, Edit, Trash2, FileText, Calendar, AlertCircle, MoreVertical } from "lucide-react";
+
+import {
+  RefreshCw,
+  Plus,
+  Edit,
+  Trash2,
+  FileText,
+  Calendar,
+  AlertCircle,
+  MoreVertical,
+} from "lucide-react";
+
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -16,11 +35,24 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+
 export default function AssignmentsPage() {
   const [assignments, setAssignments] = useState<AssignmentItem[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [refreshing, setRefreshing] = useState(false);
+
+  // ✅ delete dialog state
+  const [deleteId, setDeleteId] = useState<string | null>(null);
+  const [deleting, setDeleting] = useState(false);
 
   const loadAssignments = async () => {
     setError(null);
@@ -30,7 +62,8 @@ export default function AssignmentsPage() {
       const data = await res.json();
       setAssignments(data);
     } catch (err: unknown) {
-      const message = err instanceof Error ? err.message : "Failed to load assignments";
+      const message =
+        err instanceof Error ? err.message : "Failed to load assignments";
       setError(message);
     } finally {
       setLoading(false);
@@ -42,11 +75,13 @@ export default function AssignmentsPage() {
     loadAssignments();
   }, []);
 
-  const handleDelete = async (id: string) => {
-    if (!confirm("Delete this assignment?")) return;
+  // ✅ delete handler
+  const handleDelete = async () => {
+    if (!deleteId) return;
 
     try {
-      const res = await fetch(`/api/assignments/${id}`, {
+      setDeleting(true);
+      const res = await fetch(`/api/assignments/${deleteId}`, {
         method: "DELETE",
       });
 
@@ -55,21 +90,23 @@ export default function AssignmentsPage() {
         throw new Error(d?.error || "Delete failed");
       }
 
-      setAssignments((prev) => prev.filter((a) => a.id !== id));
+      setAssignments((prev) => prev.filter((a) => a.id !== deleteId));
+      setDeleteId(null);
     } catch (err: unknown) {
       const message = err instanceof Error ? err.message : "Delete failed";
       alert(message);
+    } finally {
+      setDeleting(false);
     }
   };
 
-const formatDate = (date: string | Date) => {
-  const d = typeof date === "string" ? new Date(date) : date;
-  return d.toLocaleDateString("en-US", {
-    month: "short",
-    day: "numeric",
-  });
-};
-
+  const formatDate = (date: string | Date) => {
+    const d = typeof date === "string" ? new Date(date) : date;
+    return d.toLocaleDateString("en-US", {
+      month: "short",
+      day: "numeric",
+    });
+  };
 
   return (
     <div className="p-4 md:p-6">
@@ -77,18 +114,27 @@ const formatDate = (date: string | Date) => {
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
         <div>
           <h1 className="text-2xl font-semibold">Assignments</h1>
-          <p className="text-sm text-gray-500 mt-1">Manage your course assignments</p>
+          <p className="text-sm text-gray-500 mt-1">
+            Manage your course assignments
+          </p>
         </div>
 
         <div className="flex items-center gap-2">
           <Button
             variant="outline"
             size="sm"
-            onClick={() => { setRefreshing(true); loadAssignments(); }}
+            onClick={() => {
+              setRefreshing(true);
+              loadAssignments();
+            }}
             disabled={refreshing}
             className="h-9"
           >
-            <RefreshCw className={`h-4 w-4 ${refreshing ? 'animate-spin mr-2' : 'mr-2'}`} />
+            <RefreshCw
+              className={`h-4 w-4 ${
+                refreshing ? "animate-spin mr-2" : "mr-2"
+              }`}
+            />
             {refreshing ? "Refreshing" : "Refresh"}
           </Button>
 
@@ -105,7 +151,7 @@ const formatDate = (date: string | Date) => {
       {loading ? (
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
           {[1, 2, 3, 4, 5, 6].map((i) => (
-            <Card key={i} className="">
+            <Card key={i}>
               <CardHeader className="pb-2">
                 <Skeleton className="h-5 w-3/4" />
                 <Skeleton className="h-3 w-full mt-2" />
@@ -131,8 +177,12 @@ const formatDate = (date: string | Date) => {
           <Card>
             <CardContent className="pt-8 pb-8 text-center">
               <FileText className="h-10 w-10 text-gray-300 mx-auto mb-3" />
-              <h3 className="text-lg font-medium text-gray-900 mb-2">No assignments yet</h3>
-              <p className="text-gray-500 mb-4 text-sm">Create your first assignment to get started</p>
+              <h3 className="text-lg font-medium mb-2">
+                No assignments yet
+              </h3>
+              <p className="text-gray-500 mb-4 text-sm">
+                Create your first assignment to get started
+              </p>
               <Button asChild size="sm">
                 <Link href="/teacher/assignments/new">
                   <Plus className="h-4 w-4 mr-2" />
@@ -145,26 +195,42 @@ const formatDate = (date: string | Date) => {
       ) : (
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
           {assignments.map((a) => (
-            <Card key={a.id} className=" flex flex-col hover:shadow-sm transition-shadow">
+            <Card
+              key={a.id}
+              className="flex flex-col hover:shadow-sm transition-shadow"
+            >
               <CardHeader className="pb-2">
                 <div className="flex justify-between items-start">
-                  <CardTitle className="text-base line-clamp-2">{a.title}</CardTitle>
+                  <CardTitle className="text-base line-clamp-2">
+                    {a.title}
+                  </CardTitle>
+
                   <DropdownMenu>
                     <DropdownMenuTrigger asChild>
-                      <Button variant="ghost" size="icon" className="h-7 w-7 -mt-1 -mr-2">
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        className="h-7 w-7 -mt-1 -mr-2"
+                      >
                         <MoreVertical className="h-4 w-4" />
                       </Button>
                     </DropdownMenuTrigger>
+
                     <DropdownMenuContent align="end">
                       <DropdownMenuItem asChild>
-                        <Link href={`/teacher/assignments/${a.id}/edit`} className="cursor-pointer">
+                        <Link
+                          href={`/teacher/assignments/${a.id}/edit`}
+                          className="cursor-pointer"
+                        >
                           <Edit className="h-4 w-4 mr-2" />
                           Edit
                         </Link>
                       </DropdownMenuItem>
+
                       <DropdownMenuSeparator />
-                      <DropdownMenuItem 
-                        onClick={() => handleDelete(a.id)}
+
+                      <DropdownMenuItem
+                        onClick={() => setDeleteId(a.id)}
                         className="text-red-600 cursor-pointer"
                       >
                         <Trash2 className="h-4 w-4 mr-2" />
@@ -173,6 +239,7 @@ const formatDate = (date: string | Date) => {
                     </DropdownMenuContent>
                   </DropdownMenu>
                 </div>
+
                 <CardDescription className="line-clamp-2 text-xs">
                   {a.description || "No description provided"}
                 </CardDescription>
@@ -180,7 +247,7 @@ const formatDate = (date: string | Date) => {
 
               <CardContent className="flex-1">
                 <div className="flex items-center gap-1 text-xs text-gray-500 mt-2">
-                  <Calendar className="h-3 w-3 flex-shrink-0" />
+                  <Calendar className="h-3 w-3" />
                   <span>Created: {formatDate(a.createdAt)}</span>
                 </div>
               </CardContent>
@@ -188,6 +255,37 @@ const formatDate = (date: string | Date) => {
           ))}
         </div>
       )}
+
+      {/* ✅ Delete Confirmation Dialog */}
+      <Dialog open={!!deleteId} onOpenChange={() => setDeleteId(null)}>
+        <DialogContent className="sm:max-w-md">
+          <DialogHeader>
+            <DialogTitle>Delete Assignment</DialogTitle>
+            <DialogDescription>
+              This action cannot be undone. This will permanently delete the
+              assignment.
+            </DialogDescription>
+          </DialogHeader>
+
+          <DialogFooter>
+            <Button
+              variant="outline"
+              onClick={() => setDeleteId(null)}
+              disabled={deleting}
+            >
+              Cancel
+            </Button>
+
+            <Button
+              variant="destructive"
+              onClick={handleDelete}
+              disabled={deleting}
+            >
+              {deleting ? "Deleting..." : "Delete"}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }

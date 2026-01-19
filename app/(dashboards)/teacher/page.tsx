@@ -25,7 +25,7 @@ export default async function TeacherDashboard() {
       <div className="max-w-7xl mx-auto space-y-8">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
           <DashboardHeader name={session.user.name!} />
-          <LogoutButton />
+          <LogoutButton  />
         </div>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
